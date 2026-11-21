@@ -25,7 +25,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;border-radius:10px}
 button:focus-visible,input:focus-visible,select:focus-visible,[contenteditable]:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.app{display:grid;grid-template-columns:250px 330px minmax(0,1fr);height:100dvh}
+:root{--sw:250px;--lw:330px}
+.app{display:grid;grid-template-columns:var(--sw) var(--lw) minmax(0,1fr);height:100dvh}
 /* sidebar */
 .side{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:6px;overflow-y:auto}
 .brand{display:flex;align-items:center;gap:10px;padding:2px 8px 12px;font-weight:800;font-size:20px;letter-spacing:-.01em}
@@ -74,10 +75,9 @@ mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
 .ib:hover{background:var(--sel);color:var(--ink)}.ib.on{color:var(--acc);background:var(--acc2)}
 .back{display:none}
 .app{transition:grid-template-columns .22s ease}
-body.focus .app{grid-template-columns:0 0 minmax(0,1fr)}
-body.focus .side,body.focus .list{visibility:hidden;overflow:hidden;border:0;padding:0}
-body.side-off:not(.focus) .app{grid-template-columns:0 330px minmax(0,1fr)}
-body.side-off:not(.focus) .side{visibility:hidden;overflow:hidden;border:0;padding:0}
+body.side-off,body.focus{--sw:0px}body.list-off,body.focus{--lw:0px}
+body.side-off .side,body.focus .side,body.list-off .list,body.focus .list{visibility:hidden;overflow:hidden;border:0;padding:0}
+body.list-off #listBtn{color:var(--acc);background:var(--acc2)}body.focus #listBtn{display:none}
 body.focus .paper-in{max-width:860px}
 #focusBtn .on{display:none}body.focus #focusBtn .on{display:block}body.focus #focusBtn .off{display:none}
 .fsel{border:1px solid var(--line);background:var(--bg);border-radius:10px;min-height:40px;padding:0 10px;max-width:220px}
@@ -130,14 +130,14 @@ body.focus .paper-in{max-width:860px}
 .toast{position:fixed;left:50%;bottom:22px;translate:-50% 0;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:14px;align-items:center;z-index:60;box-shadow:var(--sh);font-size:15px}
 .toast button{color:#8fa6ff;font-weight:700;padding:6px 8px}
 .hid{display:none!important}
-@media (max-width:1050px){.app{grid-template-columns:220px 290px minmax(0,1fr)}body.side-off:not(.focus) .app{grid-template-columns:0 290px minmax(0,1fr)}}
+@media (max-width:1050px){:root{--sw:220px;--lw:290px}}
 @media (max-width:800px){
  .tabs{top:-20px}
  .app{display:block}
  .side,.list,.ed-pane{height:100dvh}
  body:not([data-pane=nav]) .side,body:not([data-pane=list]) .list,body:not([data-pane=note]) .ed-pane{display:none}
  #menuBtn{display:grid}
- #focusBtn,#sideBtn{display:none}
+ #focusBtn,#sideBtn,#listBtn{display:none}
  .back{display:grid}
  .fab{display:grid;place-items:center;position:fixed;right:18px;bottom:22px;width:60px;height:60px;border-radius:18px;background:var(--acc);color:#fff;box-shadow:0 8px 22px #2f54eb66;z-index:10}
  body:not([data-pane=list]) .fab{display:none}
@@ -179,6 +179,7 @@ body.focus .paper-in{max-width:860px}
       <div class="etop">
         <button class="ib back" id="backBtn" aria-label="Volver"><svg class="i"><use href="#i-back"/></svg></button>
         <button class="ib" id="focusBtn" title="Modo enfoque: esconder columnas (Ctrl + .)" aria-label="Modo enfoque"><svg class="i off"><use href="#i-expand"/></svg><svg class="i on"><use href="#i-collapse"/></svg></button>
+        <button class="ib" id="listBtn" title="Mostrar u ocultar la lista de notas" aria-label="Mostrar u ocultar la lista de notas"><svg class="i"><use href="#i-listpanel"/></svg></button>
         <select class="fsel" id="fsel" aria-label="Carpeta"></select>
         <span class="sp"></span>
         <button class="ib" id="pinBtn" title="Fijar arriba"><svg class="i"><use href="#i-pin"/></svg></button>
@@ -222,6 +223,7 @@ body.focus .paper-in{max-width:860px}
   <symbol id="i-expand" viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></symbol>
   <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M10 14l-7 7M14 10l7-7"/></symbol>
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-listpanel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 4v16M5.5 8h2M5.5 11h2M5.5 14h2"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
@@ -404,7 +406,7 @@ function flush(){clearTimeout(saveT);if(!dirty)return;dirty=false;const n=S.note
 function foot(n){if(!n)return'';const w=ntext(n).split(' ').filter(Boolean).length;return w+' palabra'+(w===1?'':'s')+' · Guardado'}
 function markDirty(){const n=S.notes[S.cur];if(!n)return;curPage(n).html=$('#body').innerHTML;n.updated=Date.now();dirty=true;$('#efoot').textContent='Guardando…';clearTimeout(saveT);saveT=setTimeout(()=>{flush();renderList()},700)}
 function dropIfEmpty(id){const n=S.notes[id];if(n&&!n.deleted&&isEmpty(n)){delete S.notes[id];del(id)}}
-function closeNote(){document.body.classList.remove('focus');flush();const prev=S.cur;S.cur=null;if(prev)dropIfEmpty(prev);$('#editor').classList.add('hid');$('#lock').classList.add('hid');$('#blank').classList.remove('hid');renderList();renderSide()}
+function closeNote(){document.body.classList.remove('focus','list-off');flush();const prev=S.cur;S.cur=null;if(prev)dropIfEmpty(prev);$('#editor').classList.add('hid');$('#lock').classList.add('hid');$('#blank').classList.remove('hid');renderList();renderSide()}
 function openNote(id,pg){if(pg)S.pg[id]=pg;if(S.cur&&S.cur!==id){flush();const p=S.cur;S.cur=null;dropIfEmpty(p)}S.cur=id;renderEditor();renderList();renderSide();setPane('note')}
 function newNote(){
   const now=Date.now(),f=S.view==='folder'&&S.fid!=='none'?S.fid:null;
@@ -541,7 +543,8 @@ function importText(v){
 
 /* ---------- modo enfoque ---------- */
 function setLayout(k,on){document.body.classList.toggle(k,on);try{localStorage.setItem('folio-'+k,on?'1':'')}catch(e){}}
-try{if(localStorage.getItem('folio-side-off'))document.body.classList.add('side-off')}catch(e){}
+try{for(const k of ['side-off','list-off'])if(localStorage.getItem('folio-'+k))document.body.classList.add(k)}catch(e){}
+$('#listBtn').onclick=()=>setLayout('list-off',!document.body.classList.contains('list-off'));
 $('#focusBtn').onclick=()=>{setLayout('focus',!document.body.classList.contains('focus'));$('#body').focus()};
 $('#sideBtn').onclick=()=>setLayout('side-off',!document.body.classList.contains('side-off'));
 
